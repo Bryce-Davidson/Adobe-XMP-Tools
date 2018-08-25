@@ -7,28 +7,7 @@ import os
 import sys
 from os import walk
 from os import listdir
-
-# mainPath = r"C:\Users\Bryce\Dropbox\Automatic Photograph Adjuster\Code\Bryce"
-# playPath = r"E:\parsingPlayground\showMissing\raw-Ncat-Nxmp"
-# jpg_path, data_path = struct(mainPath)
-
-
-#%%
-"""
-please take note, in spyder if you import these functions
-you may press CTRL + i on any function to learn more about it
-
-the general pipeline of the program should go:
-    
-    get_file_type() -> to get the tuple of possible extensions for the raw files(sony, canon)
-    get_files() -> to get lists of paths relating to xmps and raws
-    organize_files() -> to make sure we have both [[xmpPath], & [raw_Path]] 
-    parse_xmp() -> to parse xmp files into a dataframe to save as CSV
-    save_dataframe() -> to save dataframe into csv for data flow module
-
-    thus will conclude this modules pipeline
-    -> next up will be the images.py module and then keras_tools 
-"""
+import numpy as np
 #%%
 # this parser is an easy to use wrapping of the parsing
 # functions I have written below
@@ -36,7 +15,7 @@ the general pipeline of the program should go:
 # this will require having to chnage the struct command with dynamic input as well
 class Parser: 
     
-    def __init__(self, jpg_dir, data_dir):
+    def __init__(self, jpg_dir: str, data_dir: str):
         self.jpg_dir = jpg_dir
         self.data_dir = data_dir
         
@@ -53,11 +32,17 @@ class Parser:
             self.camera_type = tuple([".arw",".ARW"])
             
     def addFolder(self, folder: str):
-        self.folders.append(folder)
+        if folder not in self.folders:
+            self.folders.append(folder)
+        else:
+            raise ValueError("Folder already in parser")
         
     def addFolders(self, folders: list):
         for folder in folders:
             self.folders.append(folder)
+    
+    def clear_folders(self):
+        self.folders.clear()
                     
     def parse(self):
         files = self.get_files()
@@ -119,6 +104,7 @@ class Parser:
     
     def parse_xmp(self):
         parsedXMPDicts = []
+        omitted = 0
         for xmp, raw in self.organized:
             xmp = open(xmp)
             readXmp = xmp.read()
@@ -131,7 +117,8 @@ class Parser:
                 fileName = needed["@crs:RawFileName"].split(".")[0]
                 needed["image_id"] = fileName
             except KeyError:
-                print("{} has been omitted".format(xmp))
+                omitted += 1
+                print("\r{} files have been omitted".format(omitted), end="\r")
                 pass
                 continue
             finalDict = self.flattenDict(needed, sep=":")
@@ -140,3 +127,28 @@ class Parser:
         master.set_index("image_id", inplace=True)
         return master
 #%%
+# JM parser actions
+        
+parser = Parser(r"E:\APA\JPG", r"E:\APA\Data")
+parser.addFolder(r"E:\Jon-Mark Photos")    
+parser.set_camera_type("canon")
+
+dataFrame = parser.parse()
+dataFrame.to_csv(r"E:\APA\Data\JM-MASTER.CSV")
+
+#%%
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

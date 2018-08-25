@@ -7,6 +7,23 @@ import os
 import sys
 from os import walk
 from os import listdir
+
+#%%
+"""
+please take note, in spyder if you import these functions
+you may press CTRL + i on any function to learn more about it
+
+the general pipeline of the program should go:
+    
+    get_file_type() -> to get the tuple of possible extensions for the raw files(sony, canon)
+    get_files() -> to get lists of paths relating to xmps and raws
+    organize_files() -> to make sure we have both [[xmpPath], & [raw_Path]] 
+    parse_xmp() -> to parse xmp files into a dataframe to save as CSV
+    save_dataframe() -> to save dataframe into csv for data flow module
+
+    thus will conclude this modules pipeline
+    -> next up will be the images.py module and then keras_tools 
+"""
 #%%
 def get_file_type(brand: str):
     brand = brand.lower()
@@ -33,7 +50,7 @@ def get_files(folderPaths: list, fileType: tuple)-> list:
         (can be recieved by calling get_file_type())
         
     Returns:
-        this function returns a list of .xmp and .raw file paths
+        returns a list of .xmp and .raw file paths
     """
     if isinstance(folderPaths, list):
         xmpExt = (".xmp",".XMP")

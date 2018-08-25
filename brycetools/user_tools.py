@@ -5,15 +5,6 @@ import os
 from os import walk, listdir
 from os.path import isfile, split
 from pathlib import Path
-
-#%%
-
-"""
-some ideas for this library:
-    be able to take mulitple camera types and seperate accordingly
-    in order to later sepearte the parsing into two types of cameras
-    and dynamicly create more than one master frame at one time
-"""
 #%%
 
 class FileOrganize:
@@ -103,13 +94,3 @@ class FileOrganize:
                 'folders': folders
                 }
         self.missing_cats = generate_xmp_for
-#%%
-        
-playPath = r"E:\parsingPlayground\showMissing"
-organizer = FileOrganize()     
-organizer.addFolder(playPath)
-organizer.set_camera_type("canon")
-
-mssing = organizer.show_missing()
-    
-#%%

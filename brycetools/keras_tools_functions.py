@@ -17,7 +17,7 @@ def pick_data(CSVPath: str, labelName: str) -> list:
 #%%
 def scale_frame(dataframe: list, labelName: str, feature_range=(0,1)):
     """
-    takes a dataframe and removes the outliers
+    takes a dataframe with shape [[Label][path]]and removes the outliers
     feature scales all labelName values between 0,1
     """
     df_values = dataframe[[labelName]]
