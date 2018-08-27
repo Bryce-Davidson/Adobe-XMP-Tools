@@ -1,16 +1,11 @@
 # -*- coding: utf-8 -*-
-import pandas as pd
-import numpy as np
 import os
-from os import walk, listdir
+from os import walk
 from os.path import isfile, split
-from pathlib import Path
 #%%
-
 class FileOrganize:
     """
-    fileOrganize is a class designed to help us with
-    finding what data we have and what data we need to generate
+    finds out what XMP data needs to be generated for which raw files
     """
     def __init__(self):
         self.xmpExt = (".xmp",".XMP")
@@ -23,6 +18,12 @@ class FileOrganize:
         self.missing_cats = None
 
     def set_camera_type(self, brand: str):
+        """
+        Sets the camera type of the instance [only Sony or Canon currently]
+        
+        Args:
+            brand: brand of camera files user plans to parse
+        """
         brand = brand.lower()
         if brand == "canon":
             self.camera_type = tuple([".cr2", ".CR2"])
@@ -30,21 +31,48 @@ class FileOrganize:
             self.camera_type = tuple([".arw",".ARW"])
             
     def addFolder(self, folder: str):
+        """
+        Adds folder to the folders list
+        
+        Args:
+            folder: folder path of RAW files
+        """
         self.folders.append(folder)
         
     def addFolders(self, folders: list):
+        """
+        Adds folders to the folders list
+        
+        Args:
+            folder: a list of folder paths
+        """
         for folder in folders:
             self.folders.append(folder)
             
     def show_missing(self):
+        """
+        finds which folders user needs to generate XMP data for
+        
+        Returns:
+            a dictionary of paths to generate XMP data for
+        """
         if len(self.folders) == 0:
             raise ValueError("must add a folder")
-        self.get_files()
+        self.get_raw_files()
         self.find_cats()
         return self.missing_cats
     
     # helper functions for get_file()    
     def remove_raw_add_xmp(self, paths: list)-> list:
+        """
+        Removes the RAW file extension and adds .XMP
+        
+        Args:
+            paths: a list of RAW paths
+        
+        Returns:
+            a list of XMP file paths
+        """
         seperated = []
         for path in paths:
             name = path.split(".")[0]
@@ -53,6 +81,12 @@ class FileOrganize:
         return seperated
     
     def find_missing_folders(self, xmpPaths: list):
+        """
+        Finds all folders with missing XMP data
+        
+        Args:
+            xmpPaths: paths of XMP files
+        """
         missing_folders = []
         for path in xmpPaths:
             if not isfile(path):
@@ -61,7 +95,10 @@ class FileOrganize:
         missing_folders = list(set(missing_folders))
         self.missing_folders = missing_folders
         
-    def get_files(self):
+    def get_raw_files(self):
+        """
+        Retrives a list of all RAW file paths in folders
+        """
         if self.camera_type is None:
             raise ValueError("must set camera type")
         if len(self.folders) == 0:
@@ -77,6 +114,9 @@ class FileOrganize:
         self.find_missing_folders(self.xmp_paths)
 
     def find_cats(self):
+        """
+        Checks in all folders missing XMP data and searches for lightroom catalog
+        """
         cats = []
         folders = None
         for folder in self.missing_folders:

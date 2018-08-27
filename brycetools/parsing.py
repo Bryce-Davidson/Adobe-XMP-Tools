@@ -3,19 +3,20 @@ import os
 import xmltodict
 import pandas as pd
 import collections
-import os
-import sys
 from os import walk
-from os import listdir
-import numpy as np
 #%%
 # this parser is an easy to use wrapping of the parsing
 # functions I have written below
-# TODO be able to take multiple camera types and create dataframes accordingly
-# this will require having to chnage the struct command with dynamic input as well
 class Parser: 
-    
+    """
+    Dedicated to parsing Adobe XMP files into a pandas dataframe.
+    """
     def __init__(self, jpg_dir: str, data_dir: str):
+        """
+        Args:
+            jpg_dir (str): where the user plans to save converted JPEG's.
+            data_dir (str): where the user plans to save the pandas DataFrame
+        """
         self.jpg_dir = jpg_dir
         self.data_dir = data_dir
         
@@ -25,6 +26,12 @@ class Parser:
         self.organized = None
         # self.checkslots = None
     def set_camera_type(self, brand: str):
+        """
+        Sets the camera type of the instance [only Sony or Canon currently]
+        
+        Args:
+            brand: brand of camera files user plans to parse
+        """
         brand = brand.lower()
         if brand == "canon":
             self.camera_type = tuple([".cr2", ".CR2"])
@@ -32,25 +39,49 @@ class Parser:
             self.camera_type = tuple([".arw",".ARW"])
             
     def addFolder(self, folder: str):
+        """
+        Adds folder to the parse list
+        
+        Args:
+            folder: folder path containing files user wishes to parse
+        """
         if folder not in self.folders:
             self.folders.append(folder)
         else:
             raise ValueError("Folder already in parser")
         
     def addFolders(self, folders: list):
+        """
+        Adds list of foders to the parse list
+        
+        Args:
+            folders: list of folder paths containing files user wishes to parse
+        """
         for folder in folders:
             self.folders.append(folder)
     
     def clear_folders(self):
+        """
+        Clears all folders from parse list
+        """
         self.folders.clear()
                     
     def parse(self):
+        """
+        Parses folders within the folder list
+        
+        Returns:
+            pandas DataFrame
+        """
         files = self.get_files()
         organized = self.organize_files()
         parsed = self.parse_xmp()
         return parsed
         
     def get_files(self):
+        """
+        Gathers lists of all RAW files and XMP files within folders
+        """
         if len(self.camera_type) == 0:
             raise ValueError("must set camera type")
         if len(self.folders) == 0:
@@ -69,6 +100,16 @@ class Parser:
         
     # helper functions for organize files --> will clean up after
     def file_match(self, removedXmp: list, removedRaw: list) -> list:
+        """
+        Removes XMP files or RAW files without a matching partner
+        
+        Args:
+            removedXmp: a list of XMP paths with the ".XMP" extension removed
+            removedRaw: a list of RAW paths with the ".RAW" extension removed
+            
+        Returns:
+            list containing XMP and RAW files with a partner
+        """
         inBothLists = list(set(removedXmp).intersection(removedRaw))
         inBoth = []
         for file in inBothLists:
@@ -78,6 +119,15 @@ class Parser:
         return inBoth
     
     def remove_ext(self, paths: list)-> list:
+        """
+        Removes file extensions of file paths
+        
+        Args:
+            paths: a list of file paths
+            
+        Returns:
+            list of removed extensions
+        """
         seperated = []
         for path in paths:
             name = path.split(".")[0]
@@ -85,6 +135,9 @@ class Parser:
         return seperated
     
     def organize_files(self)-> list:
+        """
+        Organizes files into pairs of RAW and XMP
+        """
         xmpPaths = self.files[0]
         rawPaths = self.files[1]
         xmpNames = self.remove_ext(rawPaths)
@@ -103,6 +156,9 @@ class Parser:
         return dict(items)
     
     def parse_xmp(self):
+        """
+        Parses xmp data ito a pandas DataFrame
+        """
         parsedXMPDicts = []
         omitted = 0
         for xmp, raw in self.organized:
@@ -126,15 +182,6 @@ class Parser:
         master = pd.DataFrame(parsedXMPDicts)
         master.set_index("image_id", inplace=True)
         return master
-#%%
-# JM parser actions
-        
-parser = Parser(r"E:\APA\JPG", r"E:\APA\Data")
-parser.addFolder(r"E:\Jon-Mark Photos")    
-parser.set_camera_type("canon")
-
-dataFrame = parser.parse()
-dataFrame.to_csv(r"E:\APA\Data\JM-MASTER.CSV")
 
 #%%
 

@@ -44,7 +44,14 @@ class PrepareData:
     def scale_data(self):
         sc = MinMaxScaler(feature_range=(0,1))
         self.scaledData = sc.fit_transform(self.converted[self.indLabels])
-    
+        
+    def pick_data(CSVPath: str, labelName: str) -> list:
+        data = pd.read_csv(CSVPath, index_col="image_id")
+        data = data[[labelName, jpg_path]]
+        data = data.dropna()
+        data = np.array(data)
+        return data   
+        
     # will have to rewrite to include extra variables
 
 #%%

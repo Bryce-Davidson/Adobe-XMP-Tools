@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
-import numpy as np
 import rawpy
 import imageio
 from os.path import join, isfile
 from tqdm import tqdm
 #%%
 def raw_to_jpg(masterCSVPath: str):
+    """
+    Converts RAW photos into JPEGS
+    Args:
+        masterCSVPath: path of DataFrame created by Parser class
+        
+    """
     dataFrame = pd.read_csv(masterCSVPath, index_col="image_id")
     # the below line is used for testing when dataframe is loaded into memory
     dfLength = len(dataFrame.index)
@@ -33,17 +38,3 @@ def raw_to_jpg(masterCSVPath: str):
             imageio.imsave(savePath, rgb)
     dataFrame.to_csv(masterCSVPath)
 #%%%
-raw_to_jpg(r"E:\APA\Data\JM-MASTER.CSV")
-
-
-#%%
-dataFrame = pd.read_csv(r"E:\APA\Data\JM-MASTER.CSV", index_col="image_id")
-
-        
-        
-        
-        
-        
-        
-        
-        
