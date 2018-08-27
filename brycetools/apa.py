@@ -4,9 +4,9 @@ from os import makedirs, mkdir, listdir
 #%%
 def struct(mainLocation: str)-> list:
     """
-    create a fresh directory on new systyem
+    Creates a fresh folder structure on a new systyem
     
-    Return:
+    Returns:
         jpg_directory path
         Data_directory path
         
