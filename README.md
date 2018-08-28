@@ -3,7 +3,7 @@
 
 ### The pipeline of this library is as follows:
 ##### 1) **user_tools**: Locate missing Data we need to generate
-##### 2) **apa**: Create JPEG and Data dirctory's for saving (if preffered)
+##### **2) apa**: Create JPEG and Data dirctory's for saving (if preffered)
 ##### 3) **parsing**: Parse Files into a pandas DataFrame and save to disk
 ##### 4) **images**: Convert RAW files into JPEG's for Keras and append JPEG path to data row for Keras generator (AVG: 3s/Photo)
 ##### (if you have jpegs already converted with the same name as RAW files place them into the JPEG dir and images will see them)
