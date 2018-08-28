@@ -2,7 +2,7 @@
 ###### brycetools is a library built for preparing Adobe XMP data for training in keras
 
 ### Parser
-"""python
+```python
 from brycetools.parsing import Parser
 
 # creating instance of class
@@ -11,4 +11,4 @@ parser = Parser()
 parser.addFolder(r"A:\FilePath\Example")
 # parsing XMP data into a pandas DataFrame
 dataFrame = parser.parse()
-"""
+```
