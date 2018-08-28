@@ -27,6 +27,5 @@ setuptools.setup(
                        "setuptools==39.1.0",
                        "numpy==1.15.0",
                        "imageio==2.3.0",
-                       "scikit_learn==0.19.2",
                        ]
 )
