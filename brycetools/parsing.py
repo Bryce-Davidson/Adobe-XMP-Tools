@@ -22,8 +22,9 @@ class Parser:
         
         self.folders = []
         self.camera_type = []
-        self.files = None
-        self.organized = None
+        self.files
+        self.organized
+        self.parsed
         # self.checkslots = None
     def set_camera_type(self, brand: str):
         """
@@ -75,8 +76,11 @@ class Parser:
         """
         files = self.get_files()
         organized = self.organize_files()
-        parsed = self.parse_xmp()
-        return parsed
+        self.parsed = self.parse_xmp()
+        return self.parsed
+    
+    def save_frame(self):
+        self.parsed.to_csv(self.data_dir)
         
     def get_files(self):
         """
