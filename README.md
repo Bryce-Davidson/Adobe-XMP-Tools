@@ -19,8 +19,9 @@ yourFrame = parser.parse()
 parser.save()
 ```
 ### Converting RAW images to JPEG for use in keras
-```pyhton
+```python
 from brycetools.images import converter
+
 converter(r"Path\To\Pandas\Frame\MASTER.CSV")
 # converter averages 3s/Photo
 ```
