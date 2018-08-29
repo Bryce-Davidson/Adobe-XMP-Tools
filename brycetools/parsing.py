@@ -80,7 +80,7 @@ class Parser:
         return self.parsed
     
     def save(self):
-        self.parsed.to_csv(self.data_dir)
+        self.parsed.to_csv(self.data_dir + "MASTER.CSV")
         
     def get_files(self):
         """

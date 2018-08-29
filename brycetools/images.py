@@ -5,7 +5,7 @@ import imageio
 from os.path import join, isfile
 from tqdm import tqdm
 #%%
-def raw_to_jpg(masterCSVPath: str):
+def converter(masterCSVPath: str):
     """
     Converts RAW photos into JPEGS
     Args:
