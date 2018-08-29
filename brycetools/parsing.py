@@ -79,7 +79,7 @@ class Parser:
         self.parsed = self.parse_xmp()
         return self.parsed
     
-    def save_frame(self):
+    def save(self):
         self.parsed.to_csv(self.data_dir)
         
     def get_files(self):
