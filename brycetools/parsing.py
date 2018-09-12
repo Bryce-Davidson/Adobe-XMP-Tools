@@ -5,8 +5,6 @@ import pandas as pd
 import collections
 from os import walk
 #%%
-# this parser is an easy to use wrapping of the parsing
-# functions I have written below
 class Parser: 
     """
     Dedicated to parsing Adobe XMP files into a pandas dataframe.
@@ -19,13 +17,12 @@ class Parser:
         """
         self.jpg_dir = jpg_dir
         self.data_dir = data_dir
-        
         self.folders = []
         self.camera_type = []
         self.files = None
         self.organized = None
         self.parsed = None
-        # self.checkslots = None
+        
     def set_camera_type(self, brand: str):
         """
         Sets the camera type of the instance [only Sony or Canon currently]
@@ -74,16 +71,15 @@ class Parser:
         Returns:
             pandas DataFrame
         """
-        files = self.get_files()
-        organized = self.organize_files()
-        self.parsed = self.parse_xmp()
-        self.parsed.to_csv(self.data_dir + "_parsed")
+        files = self._get_files()
+        organized = self._organize_files()
+        self.parsed = self._parse_xmp()
         return self.parsed
     
-    def save(self):
-        self.parsed.to_csv(self.data_dir + "MASTER.CSV")
+    def save_frame(self, saveName: str):
+        self.parsed.to_csv(self.data_dir + "\\" + saveName + ".CSV")
         
-    def get_files(self):
+    def _get_files(self):
         """
         Gathers lists of all RAW files and XMP files within folders
         """
@@ -102,9 +98,20 @@ class Parser:
                     elif file.endswith(self.camera_type):
                         rawPaths.append(os.path.join(root, file))
         self.files = [xmpPaths, rawPaths]
+    
+    def _organize_files(self)-> list:
+        """
+        Organizes files into pairs of RAW and XMP
+        """
+        xmpPaths = self.files[0]
+        rawPaths = self.files[1]
+        xmpNames = self._remove_ext(rawPaths)
+        rawNames = self._remove_ext(xmpPaths)
+        matched = self._file_match(xmpNames, rawNames)
+        self.organized = matched
         
     # helper functions for organize files --> will clean up after
-    def file_match(self, removedXmp: list, removedRaw: list) -> list:
+    def _file_match(self, removedXmp: list, removedRaw: list) -> list:
         """
         Removes XMP files or RAW files without a matching partner
         
@@ -123,7 +130,7 @@ class Parser:
             inBoth.append([xmp, raw])
         return inBoth
     
-    def remove_ext(self, paths: list)-> list:
+    def _remove_ext(self, paths: list)-> list:
         """
         Removes file extensions of file paths
         
@@ -138,29 +145,18 @@ class Parser:
             name = path.split(".")[0]
             seperated.append(name)
         return seperated
-    
-    def organize_files(self)-> list:
-        """
-        Organizes files into pairs of RAW and XMP
-        """
-        xmpPaths = self.files[0]
-        rawPaths = self.files[1]
-        xmpNames = self.remove_ext(rawPaths)
-        rawNames = self.remove_ext(xmpPaths)
-        matched = self.file_match(xmpNames, rawNames)
-        self.organized = matched
         
-    def flattenDict(self, d: dict, parent_key='', sep='_') -> dict:
+    def _flattenDict(self, d: dict, parent_key='', sep='_') -> dict:
         items = []
         for k, v in d.items():
             new_key = parent_key + sep + k if parent_key else k
             if isinstance(v, collections.MutableMapping):
-                items.extend(self.flattenDict(v, new_key, sep=sep).items())
+                items.extend(self._flattenDict(v, new_key, sep=sep).items())
             else:
                 items.append((new_key, v))
         return dict(items)
     
-    def parse_xmp(self):
+    def _parse_xmp(self):
         """
         Parses xmp data ito a pandas DataFrame
         """
@@ -182,8 +178,22 @@ class Parser:
                 print("\r{} files have been omitted".format(omitted), end="\r")
                 pass
                 continue
-            finalDict = self.flattenDict(needed, sep=":")
+            finalDict = self._flattenDict(needed, sep=":")
             parsedXMPDicts.append(finalDict)
         master = pd.DataFrame(parsedXMPDicts)
         master.set_index("image_id", inplace=True)
-        return master   
+        return master 
+#%%
+
+parser = Parser(r"E:\APA\JPG", r"E:\APA\Data")
+parser.addFolder(r"E:\Jon-Mark Photos")
+parser.set_camera_type("canon")
+
+#%%
+parsed = parser.parse()
+#%%
+parser.save_frame("test")
+
+
+
+

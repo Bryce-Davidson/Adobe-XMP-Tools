@@ -76,7 +76,7 @@ class PrepareData:
             return float(num) / float(denom)
     
 #%%
-def keras_image_generator_multiple(dataArray: list, batch_size = 10):
+def keras_apa_generator(dataArray: list, batch_size = 10):
     while True:
           # select random indexes(rows) for batch
           batch = dataArray[np.random.randint(0,dataArray.shape[0],batch_size)]
@@ -86,9 +86,9 @@ def keras_image_generator_multiple(dataArray: list, batch_size = 10):
           batch_otherInput = []
           # Read row, load the photo and take the value
           for row in batch:
-              inputImg = loadPhoto(row[16])
+              inputImg = loadPhoto(row[13])
               # inputImg /= 255
-              otherInput = row[1:16]
+              otherInput = row[1:12]
               outputValue = row[0]
             # appending values and photos into python arrays
               batch_input += [ inputImg ]
@@ -99,31 +99,3 @@ def keras_image_generator_multiple(dataArray: list, batch_size = 10):
           batch_x = np.array( batch_input )
           batch_y = np.array( batch_output )
           yield ({'image_input': batch_x , 'aux_input': batch_other}, {'prediction': batch_y})
-
-    
-#%%
-def keras_image_generator_single(dataArray: list, batch_size = 10):
-# TODO: make it so this can take more than one y value    
-    """
-    takes in numpy data array from scale_frame 
-    expected shape = [value, imgPath]
-    """
-    while True:
-          # select random indexes(rows) for batch
-          batch_paths = dataArray[np.random.randint(0,dataArray.shape[0],batch_size)]
-          # create pyhton arrays
-          batch_input = []
-          batch_output = []
-          # Read row, load the photo and take the value
-          for value, filepath in batch_paths:
-              inputImg = loadPhoto(filepath)
-              inputImg /= 255
-              outputValue = value
-            # appending values and photos into python arrays
-              batch_input += [ inputImg ]
-              batch_output += [ outputValue ]
-          # Return a tuple of (input,output) to feed the network
-          batch_x = np.array( batch_input )
-          batch_y = np.array( batch_output )
-        
-          yield( batch_x, batch_y )
