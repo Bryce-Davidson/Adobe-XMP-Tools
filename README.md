@@ -6,7 +6,7 @@
 from brycetools.parsing import Parser
 
 # creating instance of Parser
-parser = Parser('intended\jpeg\save\path','intended\xmp\data\save\path')
+parser = Parser('intended\jpeg\save\path', 'intended\parsed\xmp\data\save\path')
 # setting type of RAW files (currently only supports canon or sony)
 parser.set_camera_type("canon")
 # adding a folder to parser
@@ -18,10 +18,10 @@ yourFrame = parser.parse()
 # saving dataframe to intended data dir
 parser.save()
 ```
-### Converting RAW images to JPEG for use in keras
+### Converting RAW images to JPEG for use in Keras
 ```python
-from brycetools.images import converter
+from brycetools.images import convert
 
-converter(r"Path\To\Pandas\Frame\MASTER.CSV")
 # converter averages 3s/Photo
+convert(r"Path\To\Pandas\Frame\MASTER.CSV")
 ```

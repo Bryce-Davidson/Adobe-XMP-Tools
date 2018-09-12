@@ -22,9 +22,9 @@ class Parser:
         
         self.folders = []
         self.camera_type = []
-        self.files
-        self.organized
-        self.parsed
+        self.files = None
+        self.organized = None
+        self.parsed = None
         # self.checkslots = None
     def set_camera_type(self, brand: str):
         """
@@ -77,6 +77,7 @@ class Parser:
         files = self.get_files()
         organized = self.organize_files()
         self.parsed = self.parse_xmp()
+        self.parsed.to_csv(self.data_dir + "_parsed")
         return self.parsed
     
     def save(self):
@@ -185,21 +186,4 @@ class Parser:
             parsedXMPDicts.append(finalDict)
         master = pd.DataFrame(parsedXMPDicts)
         master.set_index("image_id", inplace=True)
-        return master
-
-#%%
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        return master   
