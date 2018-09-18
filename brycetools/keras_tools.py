@@ -5,13 +5,6 @@ from keras.preprocessing.image import load_img
 from keras.preprocessing.image import img_to_array
 from scipy import stats
 from sklearn.preprocessing import MinMaxScaler
-
-#TODO
-# break init functions into own functions
-# re-purpose keras generator to fit new data
-# find load photo function
-
-
 #%%
 class PrepareData:
     
@@ -51,7 +44,8 @@ class PrepareData:
     def _pick(self):
         self.labeled = self.dataFrame[self._labels]
         self.jpgPaths = self.dataFrame.jpg_save_path
-        self.jpgPaths.reset_index(inplace=True, drop=True)
+        self.jpgPaths = self.jpgPaths.reset_index(inplace=False, level=0)
+        
     
     def _convert_fractions(self):
         self.converted = self.labeled.applymap(self.frac_to_dec)
@@ -74,23 +68,24 @@ class PrepareData:
         except ValueError:
             num, denom = s.split('/')
             return float(num) / float(denom)
-    
 #%%
+def loadPhoto(imgPath: str)-> list:
+    image = load_img(imgPath, target_size=(224, 224))
+    image = img_to_array(image)
+    return image
+
 def keras_apa_generator(dataArray: list, batch_size = 10):
     while True:
           # select random indexes(rows) for batch
-          batch = dataArray[np.random.randint(0,dataArray.shape[0],batch_size)]
-          # create pyhton arrays
+          batch = dataArray[np.random.randint(0, dataArray.shape[0],batch_size)]
           batch_input = []
           batch_output = []
           batch_otherInput = []
-          # Read row, load the photo and take the value
           for row in batch:
-              inputImg = loadPhoto(row[13])
-              # inputImg /= 255
+              #inputImg = loadPhoto(os.path.join(r"DATA/DIR" + dataArray[1,12]))
+              inputImg = loadPhoto(row[14])
               otherInput = row[1:12]
               outputValue = row[0]
-            # appending values and photos into python arrays
               batch_input += [ inputImg ]
               batch_otherInput += [ otherInput ]
               batch_output += [ outputValue ]

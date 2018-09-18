@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+import numpy as np
 import pandas as pd
 import rawpy
 import imageio
 from os.path import join, isfile
 from tqdm import tqdm
+from keras.preprocessing.image import load_img
+from keras.preprocessing.image import img_to_array
 #%%
 def convert(masterCSVPath: str):
     """
@@ -31,4 +34,14 @@ def convert(masterCSVPath: str):
             rgb = raw.postprocess()
             imageio.imsave(savePath, rgb)
     dataFrame.to_csv(masterCSVPath)
-#%%%
+    
+#%%
+def resize(array):
+    paths = array[:, 12:]
+    for name, path in tqdm(paths):
+        root = r"E:\APA\Resized"
+        fileName = name + ".jpg"
+        savePath = join(root, fileName)
+        image = load_img(path, target_size=(224, 224))
+        image = img_to_array(image)
+        imageio.imsave(savePath, image)    
