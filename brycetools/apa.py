@@ -2,17 +2,17 @@
 from os.path import join, isdir
 from os import makedirs, mkdir, listdir
 #%%
-def struct(mainLocation: str)-> list:
+def folderStruct(location: str)-> list:
     """
     Creates a fresh folder structure on a new systyem
-    
+
     Returns:
         jpg_directory path
         Data_directory path
-        
+
         to be used with the parsing module
     """
-    apaFolder = mainLocation + "\APA"
+    apaFolder = location + "\APA"
     if not isdir(apaFolder):
         subs = [apaFolder + r"\JPG", apaFolder + r"\Data"]
         mkdir(apaFolder)
