@@ -27,7 +27,7 @@ myParser.addFolders(listOfFolders: list)
 # parse the data
 myParser.parse()
 # save parsed data to the data dir
-myParser.save()
+myParser.save_frame()
 # or, parse into a variable and save from there
 myData = myParser.parse()
 ```
