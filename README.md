@@ -1,27 +1,33 @@
-# brycetools
-#### brycetools is a library built for preparing Adobe XMP data for training in KERAS
+# Adobe-XMP-Tools
+
+Adobe-XMP-Tools is a library dedicated to parsing Adobe XMP files into .csv for training in Keras.
+
+## Getting Started
 ---
-### Parsing XMP files into Pandas DataFrame
+#### Parsing
+Parser will take 2 folder paths to instantiate
+- where you wish to save the JPEGS
+- where you wish to save the parsed CSV data
+
 ```python
 from brycetools.parsing import Parser
+myParser = Parser("C:/Jpeg/dir/path": str, "C/Data/dir/path": str)
 
-# creating instance of Parser
-myParser = Parser('intended\jpeg\save\path', 'intended\parsed\xmp\data\save\path')
-# setting type of RAW files (currently only supports CANON or SONY)
-myParser.set_camera_type("canon")
-# adding a folder to myParser
-myParser.addFolder(r"A:\FolderPath\Example")
-# can also add a list of folder paths
-parse.addFolders([list_of_folder_paths])
-# parsing XMP data into a pandas DataFrame
-yourFrame = myParser.parse()
-# saving dataframe to intended data dir
-myParser.save()
-```
-### Converting RAW images to JPEG for use in Keras
-```python
-from brycetools.images import convert
+# camera types only support "Canon or Sony"
+# more raw file types can be added by altering set_camera_type to include file extenions of any brand
+myParser.set_camera_type("canon" or "sony")
 
-# converter averages 3s/Photo
-convert(r"Path\To\Pandas\Frame\MASTER.CSV")
+# add a folder containing (XMP's & RAW files) or just XMP files to the folders list
+# this list will contain the folders containing data to be parsed
+myParser.addFolder("C:/folder/containing/": str)
+# or to add a list of folders
+listOfFolders = [list of folder paths]
+myParser.addFolders(listOfFolders: list)
+
+# parse the data
+myParser.parse()
+# save parsed data to the data dir
+myParser.save_frame()
+# or, parse into a variable and save from there
+myData = myParser.parse()
 ```
