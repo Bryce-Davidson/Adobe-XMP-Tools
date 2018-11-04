@@ -45,8 +45,7 @@ class PrepareData:
         self.labeled = self.dataFrame[self._labels]
         self.jpgPaths = self.dataFrame.jpg_save_path
         self.jpgPaths = self.jpgPaths.reset_index(inplace=False, level=0)
-        
-    
+         
     def _convert_fractions(self):
         self.converted = self.labeled.applymap(self.frac_to_dec)
         self.converted = self.converted.fillna(0)
@@ -68,7 +67,8 @@ class PrepareData:
         except ValueError:
             num, denom = s.split('/')
             return float(num) / float(denom)
-#%%
+
+
 def loadPhoto(imgPath: str)-> list:
     image = load_img(imgPath, target_size=(224, 224))
     image = img_to_array(image)

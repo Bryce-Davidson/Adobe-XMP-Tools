@@ -4,6 +4,7 @@ import pandas as pd
 import collections
 from os import walk
 
+
 class Parser:
     """
     Dedicated to parsing Adobe XMP files into a pandas dataframe.
@@ -90,13 +91,17 @@ class Parser:
 
         xmpPaths = []
         rawPaths = []
+        counter  = 0
         for path in self.folders:
             for root, dirs, files in walk(path):
                 for file in files:
+                    #print("\r", counter, "",end = " ", flush= True)
+                    print("\r{} XMP files found".format(len(xmpPaths)), end = " ", flush= True)
                     if file.endswith(self.xmpExt):
                         xmpPaths.append(os.path.join(root, file))
                     elif file.endswith(self.camera_type):
                         rawPaths.append(os.path.join(root, file))
+                    counter += 1
         self.files = [xmpPaths, rawPaths]
 
     def _organize_files(self)-> list:
@@ -182,4 +187,4 @@ class Parser:
             parsedXMPDicts.append(finalDict)
         master = pd.DataFrame(parsedXMPDicts)
         master.set_index("image_id", inplace=True)
-        return master
+        return master    
