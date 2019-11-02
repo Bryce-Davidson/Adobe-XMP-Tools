@@ -5,7 +5,7 @@ Adobe-XMP-Tools is a library dedicated to parsing Adobe XMP files into .csv for 
 ## Getting Started
 ---
 #### Parsing
-Parser will take 2 folder paths to instantiate
+Parser will take 2 folder paths
 - where you wish to save the JPEGS
 - where you wish to save the parsed CSV data
 
